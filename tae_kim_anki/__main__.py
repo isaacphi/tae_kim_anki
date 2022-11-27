@@ -1,4 +1,6 @@
 import csv
+import requests
+from bs4 import BeautifulSoup
 
 
 OUTPUT_FILENAME = "out.csv"
@@ -13,9 +15,17 @@ def write_csv_file(rows: list[list[str]]) -> None:
             writer.writerow(row)
 
 
+def parse_webpage():
+    web_url = "https://www.geeksforgeeks.org/"
+    html = requests.get(web_url).content
+    soup = BeautifulSoup(html, "html.parser")
+    print(soup)
+
+
 def main():
-    print("hello")
-    write_csv_file([["a", "b", "c"], ["1", "2", "3"]])
+    parse_webpage()
+
+    # write_csv_file([["a", "b", "c"], ["1", "2", "3"]])
 
 
 if __name__ == "__main__":

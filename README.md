@@ -4,4 +4,4 @@ Script to generate an anki deck from examples in A Guide to Japanese Grammar by 
 ## How to use:
 * install [poetry](https://python-poetry.org/docs/basic-usage/)
 * run `poetry install`
-* to run it: `poetry run python main.py`
+* to run it: `poetry run python tae_kim_anki`
