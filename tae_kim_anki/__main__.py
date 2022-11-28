@@ -35,19 +35,20 @@ class Example:
     def get_vocab(self) -> str:
         vocab = ""
         for v in self.vocab:
-            vocab += f"{v.kanji}: {v.explanation}\n"
+            vocab += f"{v.kanji}: {v.explanation}<br/>"
         return vocab
 
     def make_row(self) -> list[str]:
-        return [
-            self.japanese,
-            self.english,
-            self.get_vocab(),
-            self.section,
-            self.chapter,
-            self.link,
-            self.tags,
-        ]
+        if "vocab" not in self.tags:
+            return [
+                self.japanese,
+                self.english,
+                self.get_vocab(),
+                self.section,
+                self.chapter,
+                self.link,
+                # self.tags,
+            ]
 
 
 def write_csv_file(rows: list[list[str]]) -> None:
@@ -149,7 +150,12 @@ def main():
         print(f"Found {len(examples)} items\n")
         # next_url = False
 
-    rows = [e.make_row() for e in all_examples]
+    rows = []
+    for e in all_examples:
+        row = e.make_row()
+        if row:
+            rows.append(row)
+
     write_csv_file(rows)
 
 
