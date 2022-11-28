@@ -8,8 +8,9 @@ OUTPUT_FILENAME = "out.csv"
 START_URL = "https://guidetojapanese.org/learn/grammar/stateofbeing"
 IMPORT_HEADER = """#separator:,
 #html:true
-#columns:japanese,english,vocab,section,chapter,link
+#columns:japanese,english,vocab,section,chapter,link,tags
 #deck:A Guide to Japanese Grammar by Tae Kim - Examples
+#tags column:7
 """
 
 
@@ -29,6 +30,7 @@ class Example:
     section: str = ""
     chapter: str = ""
     link: str = ""
+    tags: str = ""
 
     def get_vocab(self) -> str:
         vocab = ""
@@ -44,6 +46,7 @@ class Example:
             self.section,
             self.chapter,
             self.link,
+            self.tags,
         ]
 
 
@@ -99,22 +102,31 @@ def parse_webpage(web_url):
     examples = []
     chapter = page.find("h1").string
 
-    # Find all headings for "Examples" sections
-    sub_titles = page.find_all("h3")
-    for sub_title in sub_titles:
-        if sub_title.contents and sub_title.contents[0] == "Examples":
+    # Parse all <ol>'s
+    for l in page.find_all("ol"):
+        previous_title = l.previous_sibling.previous_sibling
+        # if previous_title and "Vocabulary" not in previous_title:
+        if previous_title:
             section_name = ""
-            section = sub_title.find_previous_sibling("h2")
+            section = l.find_previous("h2")
             if section:
                 section_name = section.string
+                if not section_name:
+                    section_name = "".join(list(section.strings))
+            tags = ""
+            if "vocabulary" in str(previous_title).lower() or (
+                section_name and "vocabulary" in section_name.lower()
+            ):
+                tags = "tae-kim-vocabulary"
+
             # Create Example objects from each list item
-            example_list = sub_title.find_next_sibling("ol")
-            for example_section in example_list.find_all("li"):
+            for example_section in l.find_all("li"):
                 try:
                     example = create_example_from_section(example_section)
                     example.section = section_name
                     example.chapter = chapter
                     example.link = web_url
+                    example.tags = tags
                     examples.append(example)
                 except IncorrectlyFormattedExampleException as e:
                     print(f"Example could not be parsed in chapter {chapter}\n{e}")
@@ -134,9 +146,10 @@ def main():
         print("Parsing", next_url)
         examples, next_url = parse_webpage(next_url)
         all_examples.extend(examples)
-        print(f"Found {len(examples)} examples\n")
+        print(f"Found {len(examples)} items\n")
+        # next_url = False
 
-    rows = [e.make_row() for e in examples]
+    rows = [e.make_row() for e in all_examples]
     write_csv_file(rows)
 
 
