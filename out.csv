@@ -1,2 +1,22 @@
-|a|,|b|,|c|
-|1|,|2|,|3|
+#separator:,
+#html:true
+#columns:japanese,english,vocab,section,chapter,link
+#deck:A Guide to Japanese Grammar by Tae Kim - Examples
+"人だ。","Is person.","人: ひと - person
+","Declaring something is so and so using 「だ」","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"学生だ。","Is student.","学生: がくせい - student
+","Declaring something is so and so using 「だ」","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"元気だ。","Is well.","元気: 元気 - healthy; lively
+","Declaring something is so and so using 「だ」","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"学生じゃない。","Is not student.","学生: がくせい - student
+","Conjugating to the negative state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"友達じゃない。","Is not friend.","友達: ともだち - friend
+","Conjugating to the negative state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"元気じゃない。","Is not well.","元気: 元気 - healthy; lively
+","Conjugating to the negative state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"学生だった。","Was student.","学生: がくせい - student
+","Conjugating to the past state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"友達じゃなかった。","Was not friend.","友達: ともだち - student
+","Conjugating to the past state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"
+"元気じゃなかった。","Was not well.","元気: 元気 - healthy; lively
+","Conjugating to the past state-of-being","Expressing state-of-being","https://guidetojapanese.org/learn/grammar/stateofbeing"

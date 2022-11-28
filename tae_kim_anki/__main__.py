@@ -6,22 +6,50 @@ from dataclasses import dataclass
 
 OUTPUT_FILENAME = "out.csv"
 START_URL = "https://guidetojapanese.org/learn/grammar/stateofbeing"
+IMPORT_HEADER = """#separator:,
+#html:true
+#columns:japanese,english,vocab,section,chapter,link
+#deck:A Guide to Japanese Grammar by Tae Kim - Examples
+"""
+
+
+@dataclass
+class Vocab:
+    kanji: str
+    explanation: str
 
 
 @dataclass
 class Example:
     """Corresponds to one anki card"""
 
-    english: str
     japanese: str
-    vocab: list[dict[str, str]]
+    english: str
+    vocab: list[Vocab]
     section: str = ""
     chapter: str = ""
     link: str = ""
 
+    def get_vocab(self) -> str:
+        vocab = ""
+        for v in self.vocab:
+            vocab += f"{v.kanji}: {v.explanation}\n"
+        return vocab
+
+    def make_row(self) -> list[str]:
+        return [
+            self.japanese,
+            self.english,
+            self.get_vocab(),
+            self.section,
+            self.chapter,
+            self.link,
+        ]
+
 
 def write_csv_file(rows: list[list[str]]) -> None:
     with open(OUTPUT_FILENAME, "w", newline="") as csvfile:
+        csvfile.write(IMPORT_HEADER)
         writer = csv.writer(
             csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
         )
@@ -40,10 +68,10 @@ def create_example_from_section(example_section):
     for vocab_element in example_section.find_all("span"):
         kanji = vocab_element.string
         explanation = vocab_element.get("title")
-        vocab.append({"kanji": kanji, "explanation": explanation})
+        vocab.append(Vocab(kanji=kanji, explanation=explanation))
     section = example_section.find_parent("h2")
 
-    return Example(english=en, japanese=jp, vocab=vocab)
+    return Example(japanese=jp, english=en, vocab=vocab)
 
 
 def parse_webpage(web_url):
@@ -77,12 +105,12 @@ def parse_webpage(web_url):
 
 def main():
     examples, next_url = parse_webpage(START_URL)
+
+    rows = []
     for e in examples:
-        print(e)
+        rows.append(e.make_row())
 
-    print(next_url)
-
-    # write_csv_file([["a", "b", "c"], ["1", "2", "3"]])
+    write_csv_file(rows)
 
 
 if __name__ == "__main__":
